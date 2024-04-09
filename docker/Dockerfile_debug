@@ -1,0 +1,23 @@
+FROM ubuntu:22.04
+
+SHELL ["/bin/bash","-c"]
+
+# install essentials
+RUN apt-get update -y && apt-get install -y vim git wget xz-utils bzip2 libz-dev build-essential autoconf
+
+# add user
+RUN useradd -ms /bin/bash user
+
+# create working directory
+WORKDIR /home/user/
+
+# copy data into container
+RUN mkdir hpx_project
+COPY . ./hpx_project
+
+# give user write permission
+RUN chown -R user /home/user/hpx_project
+USER user
+
+# install dependencies
+RUN cd hpx_project/dependencies && ./build-all.sh Debug
