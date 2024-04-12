@@ -150,13 +150,22 @@ int hpx_main(hpx::program_options::variables_map& vm)
         prior_K_tiles[i * m_tiles + j] = hpx::dataflow(hpx::annotated_function(&gen_tile_covariance<CALC_TYPE>, "assemble_tiled"), i, j, m_tile_size, n_regressors, hyperparameters, test_input);
      }
   }
-  // Assemble transposed cross-covariance matrix vector
+  // Assemble MxN cross-covariance matrix vector
   cross_covariance_tiles.resize(m_tiles * n_tiles);
   for (std::size_t i = 0; i < m_tiles; i++)
   {
      for (std::size_t j = 0; j < n_tiles; j++)
      {
         cross_covariance_tiles[i * n_tiles + j] = hpx::dataflow(hpx::annotated_function(&gen_tile_cross_covariance<CALC_TYPE>, "assemble_tiled"), i, j, m_tile_size, n_tile_size, n_regressors, hyperparameters, test_input, training_input);
+     }
+  }
+  // Assemble NxM cross-covariance matrix vector
+  transposed_cross_covariance_tiles.resize(n_tiles * m_tiles);
+  for (std::size_t i = 0; i < n_tiles; i++)
+  {
+     for (std::size_t j = 0; j < m_tiles; j++)
+     {
+        transposed_cross_covariance_tiles[i * m_tiles + j] = hpx::dataflow(hpx::annotated_function(&gen_tile_cross_covariance<CALC_TYPE>, "assemble_tiled"), i, j, n_tile_size, m_tile_size, n_regressors, hyperparameters, training_input, test_input);
      }
   }
   // Assemble zero prediction
