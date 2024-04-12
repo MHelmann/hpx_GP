@@ -17,6 +17,7 @@ int hpx_main(hpx::program_options::variables_map& vm)
   std::vector<hpx::shared_future<std::vector<CALC_TYPE>>> prior_K_tiles;
   std::vector<hpx::shared_future<std::vector<CALC_TYPE>>> alpha_tiles;
   std::vector<hpx::shared_future<std::vector<CALC_TYPE>>> cross_covariance_tiles;
+  std::vector<hpx::shared_future<std::vector<CALC_TYPE>>> transposed_cross_covariance_tiles;
   std::vector<hpx::shared_future<std::vector<CALC_TYPE>>> prediction_tiles;
   // future data structures
   hpx::shared_future<CALC_TYPE> ft_error;
